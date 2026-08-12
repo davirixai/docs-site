@@ -61,10 +61,21 @@ export default defineConfig({
           ],
         },
         {
+          label: "Domen quruvchi",
+          translations: { en: "Domain builder" },
+          badge: { text: "Yangi", variant: "tip" },
+          items: [
+            { slug: "ilova/nima-bu" },
+            { slug: "ilova/shartnoma" },
+            { slug: "ilova/darajalar" },
+          ],
+        },
+        {
           label: "Konnektor dasturchisi",
           translations: { en: "Connector developer" },
           items: [
             { slug: "konnektor/nima-bu" },
+            { slug: "konnektor/turlari" },
             { slug: "konnektor/manifest" },
             { slug: "konnektor/verification" },
             { slug: "konnektor/sertifikatsiya" },
