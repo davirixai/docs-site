@@ -85,7 +85,7 @@ To'rtta ajralgan yo'l. Har biri boshqa savolga javob beradi.
    from davirix import Davirix
 
    dx = Davirix(api_key=os.environ["DAVIRIX_KEY"])
-   n = dx.run(agent_id="card-support", tenant_id="bank-uz",
+   n = dx.run(agent_id="acme-support", tenant_id="acme-bank",
               input={"text": "Kartani bloklang, oxirgi 4 raqam 7731"})
 
    n.status      # "completed"  — model javob berdi

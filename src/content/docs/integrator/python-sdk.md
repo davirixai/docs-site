@@ -37,7 +37,7 @@ from davirix import Davirix
 
 dx = Davirix(
     api_key=os.environ["DAVIRIX_KEY"],
-    tenant_id="bank-uz",              # ixtiyoriy: har chaqiruvda ham berish mumkin
+    tenant_id="acme-bank",              # ixtiyoriy: har chaqiruvda ham berish mumkin
     base_url=None,                    # standart: https://api.davirix.com
     timeout=30.0,
 )
@@ -56,9 +56,9 @@ with Davirix(api_key=...) as dx:
 
 ```python
 n = dx.run(
-    agent_id="card-support",
+    agent_id="acme-support",
     input={"text": "Kartani bloklang, oxirgi 4 raqam 7731"},
-    tenant_id="bank-uz",
+    tenant_id="acme-bank",
     idempotency_key="buyurtma-2026-08-12-0001",
 )
 ```

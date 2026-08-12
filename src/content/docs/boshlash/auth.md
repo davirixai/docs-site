@@ -49,10 +49,10 @@ Har so'rov qaysi tashkilotga tegishli ekanini bildirishi shart:
 
 ```python
 # Klientda bir marta — barcha chaqiruvlarga qo'llanadi
-dx = Davirix(api_key=..., tenant_id="bank-uz")
+dx = Davirix(api_key=..., tenant_id="acme-bank")
 
 # Yoki har chaqiruvda alohida
-dx.run(agent_id=..., tenant_id="bank-uz", input=...)
+dx.run(agent_id=..., tenant_id="acme-bank", input=...)
 ```
 
 Ikkalasi ham berilmasa SDK **xato beradi** — jim standart qiymat

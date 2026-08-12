@@ -23,10 +23,10 @@ Authorization: Bearer <service-JWT>
 Content-Type: application/json
 
 {
-  "tenant_id": "bank-uz",
+  "tenant_id": "acme-bank",
   "actor":     { "type": "user", "id": "u-42" },
   "input":     { "text": "Kartani bloklang, oxirgi 4 raqam 7731" },
-  "agent_id":  "card-support",
+  "agent_id":  "acme-support",
   "idempotency_key": "buyurtma-2026-08-12-0001"
 }
 ```

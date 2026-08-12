@@ -48,10 +48,10 @@ Every request must state which organisation it belongs to:
 
 ```python
 # Once on the client — applies to all calls
-dx = Davirix(api_key=..., tenant_id="bank-uz")
+dx = Davirix(api_key=..., tenant_id="acme-bank")
 
 # Or per call
-dx.run(agent_id=..., tenant_id="bank-uz", input=...)
+dx.run(agent_id=..., tenant_id="acme-bank", input=...)
 ```
 
 If neither is given the SDK **raises** — it does not silently pick a

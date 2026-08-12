@@ -85,7 +85,7 @@ Four separate paths. Each answers a different question.
    from davirix import Davirix
 
    dx = Davirix(api_key=os.environ["DAVIRIX_KEY"])
-   n = dx.run(agent_id="card-support", tenant_id="bank-uz",
+   n = dx.run(agent_id="acme-support", tenant_id="acme-bank",
               input={"text": "Block the card ending 7731"})
 
    n.status      # "completed"  — the model replied

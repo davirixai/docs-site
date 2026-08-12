@@ -49,8 +49,8 @@ natijasini **to'g'ri o'qiydigan kod** bo'ladi.
    import os
    from davirix import Davirix
 
-   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="bank-uz")
-   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='bank-uz'>
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="acme-bank")
+   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='acme-bank'>
    ```
 
 4. ### Birinchi ijroni yuboring
@@ -59,7 +59,7 @@ natijasini **to'g'ri o'qiydigan kod** bo'ladi.
      <TabItem label="Python">
      ```python
      n = dx.run(
-         agent_id="card-support",
+         agent_id="acme-support",
          input={"text": "Kartani bloklang, oxirgi 4 raqam 7731"},
          idempotency_key="buyurtma-2026-08-12-0001",
      )
@@ -71,10 +71,10 @@ natijasini **to'g'ri o'qiydigan kod** bo'ladi.
        -H "Authorization: Bearer $DAVIRIX_KEY" \
        -H "Content-Type: application/json" \
        -d '{
-         "tenant_id": "bank-uz",
+         "tenant_id": "acme-bank",
          "actor":     {"type": "user", "id": "u-42"},
          "input":     {"text": "Kartani bloklang, oxirgi 4 raqam 7731"},
-         "agent_id":  "card-support",
+         "agent_id":  "acme-support",
          "idempotency_key": "buyurtma-2026-08-12-0001"
        }'
      ```

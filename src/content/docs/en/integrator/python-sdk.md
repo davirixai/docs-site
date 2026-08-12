@@ -37,7 +37,7 @@ from davirix import Davirix
 
 dx = Davirix(
     api_key=os.environ["DAVIRIX_KEY"],
-    tenant_id="bank-uz",              # optional: can also be per call
+    tenant_id="acme-bank",              # optional: can also be per call
     base_url=None,                    # default: https://api.davirix.com
     timeout=30.0,
 )
@@ -56,9 +56,9 @@ with Davirix(api_key=...) as dx:
 
 ```python
 n = dx.run(
-    agent_id="card-support",
+    agent_id="acme-support",
     input={"text": "Block the card ending 7731"},
-    tenant_id="bank-uz",
+    tenant_id="acme-bank",
     idempotency_key="order-2026-08-12-0001",
 )
 ```

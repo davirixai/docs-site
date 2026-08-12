@@ -23,10 +23,10 @@ Authorization: Bearer <service-JWT>
 Content-Type: application/json
 
 {
-  "tenant_id": "bank-uz",
+  "tenant_id": "acme-bank",
   "actor":     { "type": "user", "id": "u-42" },
   "input":     { "text": "Block the card ending 7731" },
-  "agent_id":  "card-support",
+  "agent_id":  "acme-support",
   "idempotency_key": "order-2026-08-12-0001"
 }
 ```

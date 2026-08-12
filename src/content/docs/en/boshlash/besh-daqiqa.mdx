@@ -49,8 +49,8 @@ that reads the result **correctly**.
    import os
    from davirix import Davirix
 
-   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="bank-uz")
-   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='bank-uz'>
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="acme-bank")
+   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='acme-bank'>
    ```
 
 4. ### Send your first execution
@@ -59,7 +59,7 @@ that reads the result **correctly**.
      <TabItem label="Python">
      ```python
      n = dx.run(
-         agent_id="card-support",
+         agent_id="acme-support",
          input={"text": "Block the card ending 7731"},
          idempotency_key="order-2026-08-12-0001",
      )
@@ -71,10 +71,10 @@ that reads the result **correctly**.
        -H "Authorization: Bearer $DAVIRIX_KEY" \
        -H "Content-Type: application/json" \
        -d '{
-         "tenant_id": "bank-uz",
+         "tenant_id": "acme-bank",
          "actor":     {"type": "user", "id": "u-42"},
          "input":     {"text": "Block the card ending 7731"},
-         "agent_id":  "card-support",
+         "agent_id":  "acme-support",
          "idempotency_key": "order-2026-08-12-0001"
        }'
      ```
