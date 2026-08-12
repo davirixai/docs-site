@@ -4,7 +4,7 @@ description: O'rnatishdan birinchi tasdiqlangan amalgacha — to'liq ketma-ketli
 sidebar:
   order: 2
 holat: qisman
-holatIzoh: "SDK va ijro API'si ishlaydi. Tasdiq zanjiri (`VERIFIED`) hozir tuzatilmoqda — quyida belgilangan."
+holatIzoh: "SDK va ijro API'si ishlaydi. Tasdiq zanjiri kodda to'liq, lekin jonli stendda hali isbotlanmagan."
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
@@ -120,11 +120,14 @@ natijasini **to'g'ri o'qiydigan kod** bo'ladi.
 
 <Aside type="danger" title="Bugungi cheklov">
 Amal `VERIFIED` bo'lishi uchun konnektorda **read-back** amali bo'lishi
-shart. Bugun bu faqat `bitrix24` da bor va jonli zanjirda ikkita ochiq
-nosozlik tuzatilmoqda.
+shart. Bugun bu faqat `bitrix24` da bor.
 
-Ya'ni **hozir** ko'pchilik amal `ACKNOWLEDGED` yoki `UNKNOWN` da qoladi.
-To'liq ro'yxat: [cheklovlar](/malumotnoma/cheklovlar/).
+Zanjirdagi uchta nosozlik **tuzatildi**, lekin u haqiqiy portalga qarshi
+hali yurgizilmagan — ya'ni «ishlashi kerak», **«isbotlangan» emas**.
+
+Shuning uchun **hozir** boshqa konnektorlardagi amallar `ACKNOWLEDGED`
+yoki `UNKNOWN` da qoladi. To'liq ro'yxat:
+[cheklovlar](/malumotnoma/cheklovlar/).
 </Aside>
 
 ## Keyingi qadam

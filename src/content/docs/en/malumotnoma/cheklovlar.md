@@ -29,21 +29,30 @@ This page states **measured** reality, not the roadmap. Date:
 
 | What | Limitation |
 |---|---|
-| **Verification chain** | **2 open defects** — see below |
+| **Verification chain** | **Complete in code**, not proven on a live stand — see below |
 | **Read-back operations** | Only on `bitrix24` (`crm.get_deal`, `crm.get_lead`) |
 | **Auth** | **Three** schemes (ADR-035 tracks unification) |
 | **`input` shape** | MVP accepts `message` only; typed schema ⏳ |
 | **Domain Pack** | Contract and loader ✅ · packs installed live: **0** |
 
-### Two open defects in the verification chain
+### What was fixed in the verification chain
 
-:::danger[Until these land, most operations will not reach `VERIFIED`]
-1. **CRM operations are not registered as tools.** The connector exists in
-   the hub, but the agent cannot call it.
-2. **The verification request passes the tool name to the hub** instead of
-   the connector id — so the request never reaches its target.
+Three defects were found and **all three are fixed**:
 
-Both are being fixed in phase F0.
+| Defect | State |
+|---|---|
+| On a create, the key was not taken **from the response** | ✅ fixed · 6 tests |
+| CRM operations were **not registered as tools** | ✅ fixed · 5 tools exposed |
+| The verification request passed the **tool name** to the hub | ✅ fixed · `connector_id` field |
+
+:::caution[But there is still no live proof]
+The chain is **complete in code** and covered by unit tests. It has never
+been run against a real Bitrix24 portal — we have no sandbox credentials.
+
+That is: "should work" ✅ · "**proven** to work" ⛔
+
+Until the first live call is verified, this page will not mark the
+`VERIFIED` chain as working.
 :::
 
 ## ⛔ Not yet

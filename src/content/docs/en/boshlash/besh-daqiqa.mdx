@@ -4,7 +4,7 @@ description: From install to your first verified action — the complete sequenc
 sidebar:
   order: 2
 holat: qisman
-holatIzoh: "The SDK and execution API work. The verification chain (`VERIFIED`) is being repaired — flagged below."
+holatIzoh: "The SDK and execution API work. The verification chain is complete in code but not yet proven on a live stand."
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
@@ -120,11 +120,14 @@ that reads the result **correctly**.
 
 <Aside type="danger" title="Current limitation">
 For an operation to reach `VERIFIED` the connector must expose a
-**read-back** operation. Today only `bitrix24` has one, and two open
-defects in the live chain are being fixed.
+**read-back** operation. Today only `bitrix24` has one.
 
-So **right now** most operations settle at `ACKNOWLEDGED` or `UNKNOWN`.
-Full list: [limitations](/en/malumotnoma/cheklovlar/).
+The three defects in the chain are **fixed**, but it has never been run
+against a real portal — so "should work", **not "proven"**.
+
+That means operations on other connectors still settle at
+`ACKNOWLEDGED` or `UNKNOWN`. Full list:
+[limitations](/en/malumotnoma/cheklovlar/).
 </Aside>
 
 ## Next

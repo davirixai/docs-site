@@ -28,21 +28,31 @@ Bu sahifa **o'lchangan** holatni aytadi, rejani emas. Sana: **2026-08-12**.
 
 | Nima | Cheklov |
 |---|---|
-| **Tasdiq zanjiri** | Zanjirda **2 ta ochiq nosozlik** — pastga qarang |
+| **Tasdiq zanjiri** | Kodda **to'liq**, lekin jonli stendda **isbotlanmagan** — pastga qarang |
 | **Read-back amallari** | Faqat `bitrix24` da (`crm.get_deal`, `crm.get_lead`) |
 | **Auth** | **Uch xil** sxema (ADR-035 birlashtirishni talab qiladi) |
 | **`input` shakli** | MVP'da faqat `message`; typed sxema ⏳ |
 | **Domain Pack** | Kontrakt va yuklovchi ✅ · jonli o'rnatilgan paket **0** |
 
-### Tasdiq zanjiridagi ikki ochiq nosozlik
+### Tasdiq zanjiri — nima tuzatildi
 
-:::danger[Bu ikkisi tuzatilmaguncha ko'p amal `VERIFIED` bo'lmaydi]
-1. **CRM amallari tool sifatida ro'yxatda yo'q.** Konnektor hub'da bor,
-   lekin agent uni chaqira olmaydi.
-2. **Tasdiq so'rovi hub'ga tool nomini uzatadi**, konnektor id'sini emas —
-   so'rov manzilga yetmaydi.
+Uchta nosozlik topilgan va **uchalasi ham tuzatilgan**:
 
-Ular F0 bosqichida tuzatilmoqda.
+| Nosozlik | Holat |
+|---|---|
+| Yaratish amalida kalit **javobdan** olinmasdi | ✅ tuzatildi · 6 test |
+| CRM amallari **tool sifatida ro'yxatda yo'q** edi | ✅ tuzatildi · 5 tool ochildi |
+| Tasdiq so'rovi hub'ga **tool nomini** uzatardi | ✅ tuzatildi · `connector_id` maydoni |
+
+:::caution[Lekin jonli isbot HALI YO'Q]
+Zanjir **kodda to'liq** va birlik testlari bilan qoplangan. Ammo u
+haqiqiy Bitrix24 portaliga qarshi **hech qachon yurgizilmagan** —
+bizda sandbox kredensiali yo'q.
+
+Ya'ni: «ishlashi kerak» ✅ · «ishlashi **isbotlangan**» ⛔
+
+Birinchi jonli chaqiruv natijasi tekshirilgunicha bu sahifa `VERIFIED`
+zanjirini «ishlaydi» deb belgilamaydi.
 :::
 
 ## ⛔ Hali yo'q
