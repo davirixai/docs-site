@@ -10,8 +10,11 @@ name: docs
 # Tartib ataylab: holat eng arzon va eng tez yiqiladi. Havola tekshiruvi
 # build'ga bog'liq, shuning uchun oxirgi.
 #
-# ⚠ DEPLOY FAQAT `main` da va FAQAT barcha darvoza o'tgach. PR'da
-# tekshiriladi, lekin chiqarilmaydi.
+# ⚠ DEPLOY BU YERDA EMAS: sayt Vercel'da chiqariladi (docs.davirix.com).
+# Lekin Vercel FAQAT `npm run build` ni yurgizadi — u halollik darvozasini,
+# drift qo'riqchisini va havola tekshiruvini BILMAYDI. Shuning uchun bu
+# workflow saqlanadi: u yiqilsa PR merge qilinmaydi va buzuq kontent
+# Vercel'ga umuman yetib bormaydi.
 
 on:
   push:
@@ -24,10 +27,6 @@ on:
 
 permissions:
   contents: read
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   verify:
@@ -63,21 +62,3 @@ jobs:
       #    ko'rinib, marshrut boshqa joyga tushishi mumkin.
       - name: Ichki havolalar
         run: node scripts/check-links.mjs
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: verify
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
