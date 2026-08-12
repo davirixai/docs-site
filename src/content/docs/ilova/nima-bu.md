@@ -24,11 +24,37 @@ Ekosistema
 Savol: har bir domenga AI agentni **qanday qo'shasiz**?
 
 :::tip[Javob: yozmaysiz]
-### Agent **yozilmaydi** — u domen kontraktlaridan **generatsiya qilinadi**.
+### Agent **yozilmaydi** — u **domen standartidan** keladi.
 
 Domen sakkizta narsani e'lon qilsa, agent va uning butun ishonch qatlami —
 tool katalogi, ledger, tasdiq, approval, audit — **avtomatik** keladi.
 :::
+
+## ⚡ Eng muhim: paket — **standart**, ilova — **bajaruvchi**
+
+Ko'p odam buni teskari tushunadi. To'g'ri yo'nalish:
+
+```
+Domain Pack  =  STANDART      (ombor domeni nima qilishi kerak)
+      ↑
+   ilovalar uni BAJARADI
+      │
+  ┌───┴────┬─────────────┬──────────────┐
+bizning   sizning      hamkorniki      uchinchi
+  ERP     yangi app                     tomon
+```
+
+| | |
+|---|---|
+| `inventory` paketi | **bitta** — standart |
+| Uni bajaradigan ilova | **necha bo'lsa ham** |
+| Har biri uchun agent | **ayni** paket ishlaydi |
+
+⚡ Ya'ni ertaga boshqa ilova yozsangiz va u `inventory` standartini **A3
+darajada** bajarsa — **ayni agent** hech qanday o'zgarishsiz ishlaydi.
+
+⛔ Teskarisi bo'lsa (har ilova o'z paketini yaratsa) ular bir-biriga mos
+kelmaydi va har ilova uchun agent qaytadan yoziladi.
 
 ## Nega bu ekosistema uchun hal qiluvchi
 

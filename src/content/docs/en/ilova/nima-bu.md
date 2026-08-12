@@ -24,12 +24,38 @@ Ecosystem
 The question: how do you add an AI agent to each domain?
 
 :::tip[Answer: you don't]
-### The agent is not **written** — it is **generated** from the domain's contracts.
+### The agent is not **written** — it comes from the **domain standard**.
 
 Declare eight things and the agent, along with its entire trust layer —
 tool catalogue, ledger, verification, approval, audit — arrives
 **automatically**.
 :::
+
+## ⚡ Key idea: the pack is the **standard**, the app is the **implementor**
+
+Most people get this backwards. The correct direction:
+
+```
+Domain Pack  =  STANDARD      (what an inventory domain must do)
+      ↑
+   apps IMPLEMENT it
+      │
+  ┌───┴────┬─────────────┬──────────────┐
+  our     your new      a partner's    third
+  ERP        app                       party
+```
+
+| | |
+|---|---|
+| The `inventory` pack | **one** — the standard |
+| Apps implementing it | **as many as you like** |
+| The agent for each | the **same** pack works |
+
+⚡ Write a different app tomorrow and have it reach **A3** on the
+`inventory` standard — the **same agent** works, unchanged.
+
+⛔ Backwards (each app inventing its own pack) they never line up, and the
+agent is rewritten for every app.
 
 ## Why this is decisive for an ecosystem
 
