@@ -61,7 +61,19 @@ run **in shadow mode** alongside.
 5. Connector    — switched off
 ```
 
-⚠ An import connector needs **no write operations**. Only:
+⛔ An import connector **has no write operations** — and this is no
+longer a convention, it is an **enforced rule**.
+
+The manifest declares `connector_class: import`, and then:
+
+| Gate | Where | What happens |
+|---|---|---|
+| Contract schema | `contracts/integration/v1` | `import` + `direction: write` → manifest **invalid** |
+| Hub startup | `Manifest.Validate()` | the hub **refuses to start** on a violating manifest |
+| Tool registry | tool-executor test | adding a Bitrix write tool turns CI **red** |
+| Instance setup | `console.supports_write: false` | an instance cannot be created with `read_write` scope |
+
+Only these are needed:
 
 | Needed | Why |
 |---|---|
@@ -81,8 +93,13 @@ If we operate inside the customer's Bitrix, we become an **add-on to
 Bitrix** — and the day Bitrix ships its own AI, we are **redundant**.
 :::
 
-So operations like `crm.create_deal` are strategically **surplus**. They
-exist for historical reasons and are not repeated in new connectors.
+⚡ On 2026-08-12 three write operations (`crm.create_lead`,
+`crm.create_deal`, `crm.add_activity`) were **removed** from `bitrix24`
+together with 143 lines of adapter code. They had been written before
+this law existed and were violating it.
+
+The removal is guarded four ways (see the table above), so they cannot
+return quietly.
 
 ---
 

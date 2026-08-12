@@ -40,10 +40,15 @@ Ularsiz tizim ishlamaydi — biznes to'lovsiz va xabarsiz yurmaydi.
 | Kontragent | Holat |
 |---|---|
 | `eskiz-sms` | ✅ **3 amal** · read-back bor |
-| `payme` | ⛔ **0 amal** |
+| `payme` | ✅ **3 amal** · ⚠ jonli chaqiruvsiz |
+| `aisha` · `uzbekvoice` | ✅ nutq xizmati · **2 amal**dan |
 | `click` | ⛔ **0 amal** |
 | `uzum` | ⛔ **0 amal** |
 | bank · soliq | ⛔ manifest ham yo'q |
+
+⚠ `payme` kasseta bilan sinalgan, **jonli provayderga hech qachon
+chiqmagan**. Uchta noaniqlik ochiq qolgan («chek topilmadi» kodi,
+endpoint, holat `5` ma'nosi) — ular birinchi sandbox chaqiruvida yopiladi.
 
 ---
 
@@ -60,7 +65,23 @@ Mijozning eski tizimi. Vazifasi — **ma'lumotni olib chiqish** va
 5. Konnektor     — o'chadi
 ```
 
-⚠ Import konnektoriga **yozish amali kerak emas**. Faqat:
+⛔ Import konnektorida **yozish amali BO'LMAYDI** — va bu endi
+xohish emas, **majburlanadigan qoida**.
+
+Manifestda `connector_class: import` deb belgilanadi, keyin:
+
+| Darvoza | Qayerda | Nima bo'ladi |
+|---|---|---|
+| Kontrakt sxemasi | `contracts/integration/v1` | `import` + `direction: write` → manifest **yaroqsiz** |
+| Hub ko'tarilishi | `Manifest.Validate()` | buzuq manifest bilan hub **ishga tushmaydi** |
+| Tool registri | tool-executor testi | bitrix yozuv tool'i qo'shilsa CI **qizaradi** |
+| Instans sozlamasi | `console.supports_write: false` | `read_write` scope bilan instans **yaratilmaydi** |
+
+⚡ 2026-08-12 da `bitrix24` dan uchta yozuv amali (`crm.create_lead`,
+`crm.create_deal`, `crm.add_activity`) **olib tashlandi** — ular
+qonundan oldin yozilgan va uni buzib turgan edi.
+
+Faqat quyidagilar kerak:
 
 | Kerak | Nega |
 |---|---|
