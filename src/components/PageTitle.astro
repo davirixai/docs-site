@@ -1,0 +1,92 @@
+---
+// Sarlavha + HOLAT belgisi.
+//
+// ⚠ Nega sarlavhaning O'ZIDA, sahifa ichida emas: dasturchi sahifani
+// yuqoridan pastga o'qimaydi — u qidiruvdan kelib, kod blokini nusxalaydi.
+// Holat pastda bo'lsa u KO'RILMAYDI va ishlamaydigan narsa ishlatiladi.
+// ⚠ `_top` — Starlight'ning ichki `PAGE_TITLE_ID` qiymati. U PUBLIC
+// eksport EMAS (`@astrojs/starlight/constants` yopiq), shuning uchun
+// qiymat shu yerda takrorlanadi. Starlight uni o'zgartirsa "Skip to
+// content" havolasi va sarlavha yakori uziladi — quyidagi test shuni
+// ushlaydi: `scripts/check-page-title-id.mjs`.
+const PAGE_TITLE_ID = "_top";
+
+const { entry } = Astro.locals.starlightRoute;
+const holat = entry.data.holat as
+  | "ishlaydi"
+  | "qisman"
+  | "hali-yoq"
+  | "rejada"
+  | undefined;
+const izoh = entry.data.holatIzoh as string | undefined;
+
+const YORLIQ: Record<string, { matn: string; en: string }> = {
+  ishlaydi: { matn: "Ishlaydi", en: "Available" },
+  qisman: { matn: "Qisman", en: "Partial" },
+  "hali-yoq": { matn: "Hali yo'q", en: "Not yet" },
+  rejada: { matn: "Rejada", en: "Planned" },
+};
+
+const ingliz = Astro.locals.starlightRoute.locale === "en";
+const yorliq = holat ? YORLIQ[holat] : undefined;
+---
+
+<h1 id={PAGE_TITLE_ID}>{entry.data.title}</h1>
+
+{
+  holat && yorliq && (
+    <div class="dx-holat" data-holat={holat}>
+      <span class="dx-holat__belgi">{ingliz ? yorliq.en : yorliq.matn}</span>
+      {izoh && <span class="dx-holat__izoh">{izoh}</span>}
+    </div>
+  )
+}
+
+<style>
+  @layer starlight.core {
+    h1 {
+      margin-top: 1rem;
+      font-size: var(--sl-text-h1);
+      line-height: var(--sl-line-height-headings);
+      font-weight: 600;
+      color: var(--sl-color-white);
+    }
+  }
+
+  .dx-holat {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.7rem;
+    margin-top: 0.7rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    border-inline-start: 3px solid var(--dx-holat-rang);
+    background: var(--dx-holat-fon);
+    font-size: var(--sl-text-sm);
+  }
+  .dx-holat__belgi {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--dx-holat-rang);
+    white-space: nowrap;
+  }
+  .dx-holat__izoh { color: var(--sl-color-gray-2); }
+
+  .dx-holat[data-holat="ishlaydi"] {
+    --dx-holat-rang: var(--dx-ok);
+    --dx-holat-fon: var(--dx-ok-fon);
+  }
+  .dx-holat[data-holat="qisman"] {
+    --dx-holat-rang: var(--dx-warn);
+    --dx-holat-fon: var(--dx-warn-fon);
+  }
+  .dx-holat[data-holat="hali-yoq"] {
+    --dx-holat-rang: var(--dx-bad);
+    --dx-holat-fon: var(--dx-bad-fon);
+  }
+  .dx-holat[data-holat="rejada"] {
+    --dx-holat-rang: var(--sl-color-gray-3);
+    --dx-holat-fon: var(--sl-color-gray-6);
+  }
+</style>

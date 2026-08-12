@@ -1,0 +1,134 @@
+---
+title: 5 daqiqada birinchi ijro
+description: O'rnatishdan birinchi tasdiqlangan amalgacha — to'liq ketma-ketlik.
+sidebar:
+  order: 2
+holat: qisman
+holatIzoh: "SDK va ijro API'si ishlaydi. Tasdiq zanjiri (`VERIFIED`) hozir tuzatilmoqda — quyida belgilangan."
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+Bu sahifa oxirigacha bajarilsa sizda **ishlaydigan ijro** va uning
+natijasini **to'g'ri o'qiydigan kod** bo'ladi.
+
+## Kerak bo'ladi
+
+| | |
+|---|---|
+| Python | 3.10+ |
+| Kalit | `DAVIRIX_KEY` — konsoldan olinadi |
+| Tenant | `tenant_id` — sizning tashkilotingiz identifikatori |
+
+## Qadamlar
+
+<Steps>
+
+1. ### O'rnating
+
+   ```bash
+   pip install davirix
+   ```
+
+   Paket sof-Python (`py3-none-any`) — Linux, macOS va Windows'da
+   bir xil ishlaydi.
+
+2. ### Kalitni muhitga qo'ying
+
+   ```bash
+   export DAVIRIX_KEY="dx_..."
+   ```
+
+   :::caution
+   Kalitni kodga yozmang va repoga qo'ymang. SDK uni muhitdan o'qiydi.
+   :::
+
+3. ### Ulanishni tekshiring
+
+   ```python
+   import os
+   from davirix import Davirix
+
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="bank-uz")
+   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='bank-uz'>
+   ```
+
+4. ### Birinchi ijroni yuboring
+
+   <Tabs>
+     <TabItem label="Python">
+     ```python
+     n = dx.run(
+         agent_id="card-support",
+         input={"text": "Kartani bloklang, oxirgi 4 raqam 7731"},
+         idempotency_key="buyurtma-2026-08-12-0001",
+     )
+     ```
+     </TabItem>
+     <TabItem label="curl">
+     ```bash
+     curl -X POST https://api.davirix.com/v1/executions \
+       -H "Authorization: Bearer $DAVIRIX_KEY" \
+       -H "Content-Type: application/json" \
+       -d '{
+         "tenant_id": "bank-uz",
+         "actor":     {"type": "user", "id": "u-42"},
+         "input":     {"text": "Kartani bloklang, oxirgi 4 raqam 7731"},
+         "agent_id":  "card-support",
+         "idempotency_key": "buyurtma-2026-08-12-0001"
+       }'
+     ```
+     </TabItem>
+   </Tabs>
+
+   :::tip[`idempotency_key` — sizning himoyangiz]
+   Har **mantiqiy amal** uchun barqaror kalit yuboring. Tarmoq uzilib
+   qayta chaqirganingizda dublikat himoyasi aynan shu bilan ishlaydi.
+   Batafsil: [idempotentlik](/integrator/idempotentlik/).
+   :::
+
+5. ### Natijani **to'g'ri** o'qing
+
+   ```python
+   n.status        # "completed" — model javob berdi
+   n.verified      # ⚡ AMAL manbadan tasdiqlandimi
+   n.unknown       # natija noma'lummi
+
+   for op in n.operations:
+       print(op.capability_id, op.status)
+   ```
+
+   ⛔ `n.status == "completed"` ni «bajarildi» deb o'qish — eng ko'p
+   uchraydigan xato. Sabab va to'g'ri naqsh:
+   [eng muhim qoida](/boshlash/eng-muhim-qoida/).
+
+6. ### Xatolarni ajrating
+
+   ```python
+   from davirix import APIError
+
+   try:
+       n = dx.run(...)
+   except APIError as e:
+       if e.retryable:
+           ...      # qayta urinish XAVFSIZ
+       else:
+           ...      # qayta urinish muammoni tuzatmaydi
+   ```
+
+</Steps>
+
+<Aside type="danger" title="Bugungi cheklov">
+Amal `VERIFIED` bo'lishi uchun konnektorda **read-back** amali bo'lishi
+shart. Bugun bu faqat `bitrix24` da bor va jonli zanjirda ikkita ochiq
+nosozlik tuzatilmoqda.
+
+Ya'ni **hozir** ko'pchilik amal `ACKNOWLEDGED` yoki `UNKNOWN` da qoladi.
+To'liq ro'yxat: [cheklovlar](/malumotnoma/cheklovlar/).
+</Aside>
+
+## Keyingi qadam
+
+- [Python SDK](/integrator/python-sdk/) — to'liq API
+- [Holatlar](/integrator/holatlar/) — ijro qanday rivojlanadi
+- [Xatolar](/integrator/xatolar/) — xato konverti va `retryable`

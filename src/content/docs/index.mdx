@@ -1,0 +1,104 @@
+---
+title: Davirix dasturchi hujjatlari
+description: AI xodim platformasiga ulanish, konnektor yozish va domain pack tayyorlash bo'yicha to'liq qo'llanma.
+template: splash
+hero:
+  tagline: |
+    AI amal bajaradigan platforma. Eng muhimi — u «bajarildi» deganda
+    buni MANBADAN isbotlaydi.
+  actions:
+    - text: 5 daqiqada birinchi ijro
+      link: /boshlash/besh-daqiqa/
+      icon: right-arrow
+    - text: Eng muhim qoida
+      link: /boshlash/eng-muhim-qoida/
+      variant: minimal
+      icon: information
+---
+
+import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Bu hujjatlar bugungi HAQIQATNI aytadi">
+Har sahifada **holat belgisi** bor: `Ishlaydi` · `Qisman` · `Hali yo'q` · `Rejada`.
+
+Ishlamaydigan narsani ishlaydi deb yozish integratsiyani soatlarga
+uzaytiradi. Shuning uchun bu yerda reklama yo'q — faqat o'lchangan holat.
+</Aside>
+
+## Siz kimsiz?
+
+Uchta ajralgan yo'l bor. Har biri boshqa savolga javob beradi.
+
+<CardGrid>
+  <Card title="Integrator" icon="laptop">
+    **«Ilovamdan AI'ni chaqirmoqchiman.»**
+
+    Python SDK yoki HTTP API. Ijro yuborasiz, natijani kuzatasiz va
+    amal haqiqatan bajarilganini tekshirasiz.
+
+    → [Python SDK](/integrator/python-sdk/)
+  </Card>
+
+  <Card title="Konnektor dasturchisi" icon="puzzle">
+    **«O'z tizimimni AI'ga ulamoqchiman.»**
+
+    Deklarativ manifest yozasiz, lokalda tekshirasiz va sertifikat
+    olasiz. Yangi platforma kodi yozilmaydi.
+
+    → [Konnektor nima](/konnektor/nima-bu/)
+  </Card>
+
+  <Card title="Paket muallifi" icon="open-book">
+    **«Butun vertikalni qadoqlamoqchiman.»**
+
+    Domain Pack — biznes amallari, tasdiq qoidalari va konnektor
+    talablari bitta faylda.
+
+    → [Domain Pack](/paket/nima-bu/)
+  </Card>
+</CardGrid>
+
+## Eng qisqa yo'l
+
+<Steps>
+
+1. **Kalitni oling** — `DAVIRIX_KEY` muhit o'zgaruvchisiga qo'ying.
+
+2. **SDK'ni o'rnating:**
+
+   ```bash
+   pip install davirix
+   ```
+
+3. **Birinchi ijroni yuboring:**
+
+   ```python
+   from davirix import Davirix
+
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"])
+   n = dx.run(agent_id="card-support", tenant_id="bank-uz",
+              input={"text": "Kartani bloklang, oxirgi 4 raqam 7731"})
+
+   n.status      # "completed"  — model javob berdi
+   n.verified    # ⚡ AMAL tasdiqlandimi
+   ```
+
+4. **Farqni tushuning** — `status` va `verified` bir xil emas.
+   Buni tushunmasdan integratsiya qilish eng ko'p uchraydigan xato:
+   [eng muhim qoida](/boshlash/eng-muhim-qoida/).
+
+</Steps>
+
+## Nima bilan boshqacha
+
+| | Oddiy AI pipeline | Davirix |
+|---|---|---|
+| Tarmoq uzildi — amal bajarildimi? | ❓ bilmaydi | `UNKNOWN`, qayta yuborish **taqiq** |
+| Qayta urinish → ikkita SMS? | ⚠ ha | 10 000 parallel → **aynan 1** |
+| Model «yubordim» dedi | ✅ ishonadi | `ACKNOWLEDGED` ≠ `VERIFIED` |
+| 2 yildan keyin: «nega bu qaror?» | ❌ iz yo'q | offline manifest, 1 bayt buzilsa aniqlanadi |
+
+<Aside type="tip" title="Qayerdan boshlash kerakligini bilmayapsizmi?">
+[Davirix nima](/boshlash/nima-bu/) — 3 daqiqalik umumiy ko'rinish, keyin
+o'z yo'lingizni tanlaysiz.
+</Aside>

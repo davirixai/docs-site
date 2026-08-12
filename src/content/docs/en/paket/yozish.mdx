@@ -1,0 +1,116 @@
+---
+title: Writing a pack
+description: From an empty file to an installed pack — step by step.
+sidebar:
+  order: 2
+holat: qisman
+holatIzoh: "Authoring and validation work. Loading via `DOMAIN_PACKS_DIR` works; installing from the console is ⏳ not yet available."
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. ### List the business operations
+
+   **Writes only** — reads belong in `read_tools`.
+
+   | Business action | Capability |
+   |---|---|
+   | Take in a repair | `service.order.create` |
+   | Sell a part | `sales.order.create` |
+   | Check order status | ⚠ this is a **read** — `read_tools` |
+
+2. ### Find the connector operation for each
+
+   ⚠ **One tool, one capability.** Two business meanings cannot share a
+   tool.
+
+   ```
+   service.order.create  →  crm.create_lead
+   sales.order.create    →  crm.create_deal    ← separate tool
+   ```
+
+3. ### Find the **read-back** partner for each write
+
+   This step decides the entire value of the pack.
+
+   ```
+   crm.create_lead  →  crm.get_lead   → status_id in [NEW, IN_PROCESS]
+   crm.create_deal  →  crm.get_deal   → closed = "N"
+   ```
+
+   ⛔ With no read-back the operation stays at `ACKNOWLEDGED`.
+   [Details](/en/konnektor/verification/).
+
+4. ### Write the file
+
+   ```json
+   {
+     "id": "texnik-servis",
+     "version": "1.0.0",
+     "display_name": "Technical service",
+     "domain": "texnik-servis",
+     "connectors": [{ "id": "bitrix24", "min_version": "2.1.0" }],
+     "capabilities": [
+       {
+         "id": "service.order.create",
+         "tools": ["connector.bitrix24.crm.create_lead"],
+         "side_effect": "REVERSIBLE",
+         "resource_param": "external_id",
+         "verification": {
+           "operation": "crm.get_lead",
+           "business_key": "id",
+           "expect": { "field": "status_id", "in": ["NEW", "IN_PROCESS"] },
+           "max_wait_ms": 15000,
+           "on_missing": "UNKNOWN"
+         }
+       }
+     ],
+     "read_tools": ["connector.bitrix24.crm.get_lead"]
+   }
+   ```
+
+5. ### Validate against the contract
+
+   ```bash
+   python3 contracts/compatibility-tests/run_python.py
+   ```
+
+   Schema: `contracts/platform/pack/v1/domain-pack.schema.json`
+
+6. ### Load it
+
+   ```bash
+   export DOMAIN_PACKS_DIR=/etc/davirix/packs
+   ```
+
+   Every `*.json` in the directory is loaded.
+
+</Steps>
+
+<Aside type="danger" title="An invalid pack stops the service from starting">
+This is **deliberate**. Silently skipping an invalid pack would drop its
+capabilities from the catalogue, and calls would pass through as
+"unmapped tool" — **without a ledger entry**, meaning **no duplicate
+protection**.
+
+Silently half-working is the most dangerous outcome.
+</Aside>
+
+## What gets rejected
+
+| Mistake | Message |
+|---|---|
+| `IRREVERSIBLE` with no `verification` | "its result would never be VERIFIED" |
+| `side_effect: NONE` | "put it in `read_tools`" |
+| `expect` with neither `in` nor `equals` | "a predicate is required" |
+| Both present | "cannot be given together" |
+| One tool in two capabilities | "the key would be ambiguous" |
+| Capability id exists in the base catalogue | "a pack cannot redefine it" |
+| Unknown field (`prompts`) | "field has no consumer" |
+
+## Next
+
+- [What a Domain Pack is](/en/paket/nima-bu/)
+- [Limitations](/en/malumotnoma/cheklovlar/)

@@ -1,0 +1,104 @@
+---
+title: Davirix developer documentation
+description: Connect to the AI workforce platform, build connectors and ship domain packs.
+template: splash
+hero:
+  tagline: |
+    A platform where AI takes action. And when it says "done",
+    it proves that against the SOURCE.
+  actions:
+    - text: First execution in 5 minutes
+      link: /en/boshlash/besh-daqiqa/
+      icon: right-arrow
+    - text: The one rule that matters
+      link: /en/boshlash/eng-muhim-qoida/
+      variant: minimal
+      icon: information
+---
+
+import { Card, CardGrid, Aside, Steps } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="These docs describe TODAY, not the roadmap">
+Every page carries a **status badge**: `Available` · `Partial` · `Not yet` · `Planned`.
+
+Documenting something as working when it isn't costs you hours of
+integration time. So there is no marketing here — only measured state.
+</Aside>
+
+## Who are you?
+
+Three separate paths. Each answers a different question.
+
+<CardGrid>
+  <Card title="Integrator" icon="laptop">
+    **"I want to call agents from my application."**
+
+    Python SDK or HTTP API. You submit an execution, track it, and
+    check whether the action actually happened.
+
+    → [Python SDK](/en/integrator/python-sdk/)
+  </Card>
+
+  <Card title="Connector developer" icon="puzzle">
+    **"I want to plug my system into the AI."**
+
+    You write a declarative manifest, verify it locally and get
+    certified. No platform code is written.
+
+    → [What a connector is](/en/konnektor/nima-bu/)
+  </Card>
+
+  <Card title="Pack author" icon="open-book">
+    **"I want to package an entire vertical."**
+
+    A Domain Pack holds business operations, verification rules and
+    connector requirements in one file.
+
+    → [Domain Pack](/en/paket/nima-bu/)
+  </Card>
+</CardGrid>
+
+## The shortest path
+
+<Steps>
+
+1. **Get your key** — put it in `DAVIRIX_KEY`.
+
+2. **Install the SDK:**
+
+   ```bash
+   pip install davirix
+   ```
+
+3. **Send your first execution:**
+
+   ```python
+   from davirix import Davirix
+
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"])
+   n = dx.run(agent_id="card-support", tenant_id="bank-uz",
+              input={"text": "Block the card ending 7731"})
+
+   n.status      # "completed"  — the model replied
+   n.verified    # ⚡ was the ACTION confirmed
+   ```
+
+4. **Understand the difference** — `status` and `verified` are not the
+   same thing. Integrating without knowing this is the most common
+   mistake: [the one rule that matters](/en/boshlash/eng-muhim-qoida/).
+
+</Steps>
+
+## What makes it different
+
+| | Ordinary AI pipeline | Davirix |
+|---|---|---|
+| Network dropped — did it happen? | ❓ doesn't know | `UNKNOWN`, retry **forbidden** |
+| Retry → two SMS? | ⚠ yes | 10,000 parallel → **exactly 1** |
+| Model said "I sent it" | ✅ believes it | `ACKNOWLEDGED` ≠ `VERIFIED` |
+| Two years later: "why this decision?" | ❌ no trace | offline manifest, one changed byte is detected |
+
+<Aside type="tip" title="Not sure where to start?">
+[What Davirix is](/en/boshlash/nima-bu/) — a 3-minute overview, then pick
+your path.
+</Aside>

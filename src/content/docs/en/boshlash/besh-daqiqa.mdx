@@ -1,0 +1,134 @@
+---
+title: First execution in 5 minutes
+description: From install to your first verified action — the complete sequence.
+sidebar:
+  order: 2
+holat: qisman
+holatIzoh: "The SDK and execution API work. The verification chain (`VERIFIED`) is being repaired — flagged below."
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+Work through this page and you will have a **working execution** plus code
+that reads the result **correctly**.
+
+## You will need
+
+| | |
+|---|---|
+| Python | 3.10+ |
+| Key | `DAVIRIX_KEY` — from the console |
+| Tenant | `tenant_id` — your organisation identifier |
+
+## Steps
+
+<Steps>
+
+1. ### Install
+
+   ```bash
+   pip install davirix
+   ```
+
+   Pure Python (`py3-none-any`) — identical on Linux, macOS and Windows.
+
+2. ### Put the key in your environment
+
+   ```bash
+   export DAVIRIX_KEY="dx_..."
+   ```
+
+   :::caution
+   Do not hard-code the key or commit it. The SDK reads it from the
+   environment.
+   :::
+
+3. ### Check the connection
+
+   ```python
+   import os
+   from davirix import Davirix
+
+   dx = Davirix(api_key=os.environ["DAVIRIX_KEY"], tenant_id="bank-uz")
+   print(dx)   # <Davirix base_url='https://api.davirix.com' tenant_id='bank-uz'>
+   ```
+
+4. ### Send your first execution
+
+   <Tabs>
+     <TabItem label="Python">
+     ```python
+     n = dx.run(
+         agent_id="card-support",
+         input={"text": "Block the card ending 7731"},
+         idempotency_key="order-2026-08-12-0001",
+     )
+     ```
+     </TabItem>
+     <TabItem label="curl">
+     ```bash
+     curl -X POST https://api.davirix.com/v1/executions \
+       -H "Authorization: Bearer $DAVIRIX_KEY" \
+       -H "Content-Type: application/json" \
+       -d '{
+         "tenant_id": "bank-uz",
+         "actor":     {"type": "user", "id": "u-42"},
+         "input":     {"text": "Block the card ending 7731"},
+         "agent_id":  "card-support",
+         "idempotency_key": "order-2026-08-12-0001"
+       }'
+     ```
+     </TabItem>
+   </Tabs>
+
+   :::tip[`idempotency_key` is your protection]
+   Send a **stable** key per logical action. When the network drops and
+   your code retries, this is what prevents a duplicate.
+   See [idempotency](/en/integrator/idempotentlik/).
+   :::
+
+5. ### Read the result **correctly**
+
+   ```python
+   n.status        # "completed" — the model replied
+   n.verified      # ⚡ was the ACTION confirmed against the source
+   n.unknown       # is the outcome unknown
+
+   for op in n.operations:
+       print(op.capability_id, op.status)
+   ```
+
+   ⛔ Reading `n.status == "completed"` as "done" is the most common
+   mistake. Why, and the correct pattern:
+   [the one rule that matters](/en/boshlash/eng-muhim-qoida/).
+
+6. ### Separate your errors
+
+   ```python
+   from davirix import APIError
+
+   try:
+       n = dx.run(...)
+   except APIError as e:
+       if e.retryable:
+           ...      # retrying is SAFE
+       else:
+           ...      # retrying will not fix it
+   ```
+
+</Steps>
+
+<Aside type="danger" title="Current limitation">
+For an operation to reach `VERIFIED` the connector must expose a
+**read-back** operation. Today only `bitrix24` has one, and two open
+defects in the live chain are being fixed.
+
+So **right now** most operations settle at `ACKNOWLEDGED` or `UNKNOWN`.
+Full list: [limitations](/en/malumotnoma/cheklovlar/).
+</Aside>
+
+## Next
+
+- [Python SDK](/en/integrator/python-sdk/) — full API
+- [Statuses](/en/integrator/holatlar/) — how an execution progresses
+- [Errors](/en/integrator/xatolar/) — the error envelope and `retryable`

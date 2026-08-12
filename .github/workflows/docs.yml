@@ -1,0 +1,83 @@
+name: docs
+
+# docs.davirix.com — darvozalar + GitHub Pages deploy.
+#
+# ⚠ UCHTA DARVOZA, HAR BIRI BOSHQA SAVOLGA JAVOB BERADI:
+#   1. holat   — har sahifa O'ZI haqida rost gapiryaptimi
+#   2. build   — sayt umuman qurilyaptimi
+#   3. links   — havolalar QURILGAN chiqishda ishlayaptimi
+#
+# Tartib ataylab: holat eng arzon va eng tez yiqiladi. Havola tekshiruvi
+# build'ga bog'liq, shuning uchun oxirgi.
+#
+# ⚠ DEPLOY FAQAT `main` da va FAQAT barcha darvoza o'tgach. PR'da
+# tekshiriladi, lekin chiqarilmaydi.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Haftalik: kontent o'zgarmasa ham bog'liqliklar buzilmaganini tekshiradi.
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ⚠ Node 22: Astro 6+ undan pastda UMUMAN ishga tushmaydi
+      # (`engines.node: >=22.12.0`). Versiya `.nvmrc` dan — lokal va CI
+      # uchun yagona manba.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # 1. HALOLLIK — hujjatlarning yagona va'dasi shu darvozada.
+      - name: Holat belgilari
+        run: node scripts/check-status.mjs
+
+      # 2. DRIFT — Starlight ichki `PAGE_TITLE_ID` o'zgarmaganmi.
+      - name: Starlight drift
+        run: node scripts/check-page-title-id.mjs
+
+      - name: Tiplar
+        run: npx astro check --minimumSeverity error
+
+      - name: Qurish
+        run: npm run build
+
+      # 3. HAVOLALAR — qurilgan chiqishda: manba markdown to'g'ri
+      #    ko'rinib, marshrut boshqa joyga tushishi mumkin.
+      - name: Ichki havolalar
+        run: node scripts/check-links.mjs
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

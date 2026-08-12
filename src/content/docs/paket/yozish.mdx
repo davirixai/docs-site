@@ -1,0 +1,115 @@
+---
+title: Paket yozish
+description: Bo'sh fayldan o'rnatilgan paketgacha — qadamma-qadam.
+sidebar:
+  order: 2
+holat: qisman
+holatIzoh: "Yozish va tekshirish ishlaydi. `DOMAIN_PACKS_DIR` orqali yuklash ishlaydi; konsoldan o'rnatish ⏳ hali yo'q."
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. ### Biznes amallarini yozib chiqing
+
+   Faqat **yozuv** amallari — o'qish `read_tools` ga tushadi.
+
+   | Biznes ishi | Capability |
+   |---|---|
+   | Buyurtma qabul qilish | `service.order.create` |
+   | Ehtiyot qism savdosi | `sales.order.create` |
+   | Buyurtma holatini ko'rish | ⚠ bu **o'qish** — `read_tools` |
+
+2. ### Har amal uchun konnektor amalini toping
+
+   ⚠ **Bitta tool — bitta capability.** Ikki biznes ma'nosi bitta
+   tool'ni bo'lisha olmaydi.
+
+   ```
+   service.order.create  →  crm.create_lead
+   sales.order.create    →  crm.create_deal    ← ayrim tool
+   ```
+
+3. ### Har yozuv uchun **read-back** juftligini toping
+
+   Bu qadam paketning butun qiymatini hal qiladi.
+
+   ```
+   crm.create_lead  →  crm.get_lead   → status_id in [NEW, IN_PROCESS]
+   crm.create_deal  →  crm.get_deal   → closed = "N"
+   ```
+
+   ⛔ Read-back yo'q bo'lsa amal `ACKNOWLEDGED` da qoladi.
+   [Batafsil](/konnektor/verification/).
+
+4. ### Faylni yozing
+
+   ```json
+   {
+     "id": "texnik-servis",
+     "version": "1.0.0",
+     "display_name": "Texnik servis",
+     "domain": "texnik-servis",
+     "connectors": [{ "id": "bitrix24", "min_version": "2.1.0" }],
+     "capabilities": [
+       {
+         "id": "service.order.create",
+         "tools": ["connector.bitrix24.crm.create_lead"],
+         "side_effect": "REVERSIBLE",
+         "resource_param": "external_id",
+         "verification": {
+           "operation": "crm.get_lead",
+           "business_key": "id",
+           "expect": { "field": "status_id", "in": ["NEW", "IN_PROCESS"] },
+           "max_wait_ms": 15000,
+           "on_missing": "UNKNOWN"
+         }
+       }
+     ],
+     "read_tools": ["connector.bitrix24.crm.get_lead"]
+   }
+   ```
+
+5. ### Kontraktga qarshi tekshiring
+
+   ```bash
+   python3 contracts/compatibility-tests/run_python.py
+   ```
+
+   Sxema: `contracts/platform/pack/v1/domain-pack.schema.json`
+
+6. ### Yuklang
+
+   ```bash
+   export DOMAIN_PACKS_DIR=/etc/davirix/packs
+   ```
+
+   Papkadagi barcha `*.json` yuklanadi.
+
+</Steps>
+
+<Aside type="danger" title="Yaroqsiz paket — xizmat ishga tushmaydi">
+Bu **ataylab**. Yaroqsiz paketni jim tashlab ketish uning amallarini
+katalogdan chiqarardi va chaqiruv «xaritalanmagan tool» sifatida
+**ledgersiz** o'tib ketardi — ya'ni dublikat himoyasi **yo'q** holatda.
+
+Jim yarim ishlash — eng xavfli natija.
+</Aside>
+
+## Yiqiladigan holatlar
+
+| Xato | Xabar |
+|---|---|
+| `IRREVERSIBLE` + `verification` yo'q | «natijasi hech qachon VERIFIED bo'lmaydi» |
+| `side_effect: NONE` | «`read_tools` ga qo'ying» |
+| `expect` da `in` ham, `equals` ham yo'q | «predikat majburiy» |
+| Ikkalasi ham bor | «birga berilmaydi» |
+| Bitta tool ikki capability'da | «kalit noaniq bo'lardi» |
+| Capability id bazaviy katalogda bor | «paket uni qayta ta'riflay olmaydi» |
+| Noma'lum maydon (`prompts`) | «iste'molchisi yo'q maydon» |
+
+## Keyingi qadam
+
+- [Domain Pack nima](/paket/nima-bu/)
+- [Cheklovlar](/malumotnoma/cheklovlar/)

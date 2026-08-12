@@ -1,0 +1,29 @@
+{
+  "name": "@davirix/docs-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "docs.davirix.com — dasturchi hujjatlari (Astro Starlight)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check --minimumSeverity error",
+    "lint:status": "node scripts/check-status.mjs",
+    "lint:links": "node scripts/check-links.mjs",
+    "lint:drift": "node scripts/check-page-title-id.mjs",
+    "verify": "npm run lint:status && npm run lint:drift && npm run check && npm run build && npm run lint:links"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.7",
+    "astro": "^7.2.1",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,61 @@
+/* docs.davirix.com — vizual identifikatsiya.
+ *
+ * ⚠ YASHIL RANG QAT'IY CHEKLANGAN. Butun platforma «soxta bajarildi»ga
+ * qarshi qurilgan; hujjatlarda ham yashil FAQAT haqiqatan tasdiqlangan
+ * narsani bildiradi (`ishlaydi`, `VERIFIED`). Qolgan hamma joyda —
+ * neytral yoki aksent. Yashilni bezak sifatida ishlatish hujjatning
+ * o'z xabariga zid bo'lardi.
+ */
+
+:root {
+  /* Aksent — petrol/tekshiruv ko'ki. Standart Starlight binafshasi emas:
+     u har Starlight saytida bor va Davirix'ni ajratmaydi. */
+  --sl-color-accent-low: #0d2f31;
+  --sl-color-accent: #0f7d7a;
+  --sl-color-accent-high: #a6ded9;
+
+  --dx-ok: #4cb37b;
+  --dx-ok-fon: #102c1e;
+  --dx-warn: #d2971e;
+  --dx-warn-fon: #2e230a;
+  --dx-bad: #d4685a;
+  --dx-bad-fon: #2e1610;
+}
+
+:root[data-theme="light"] {
+  --sl-color-accent-low: #d6ecea;
+  --sl-color-accent: #0b6e6e;
+  --sl-color-accent-high: #05403f;
+
+  --dx-ok: #1b7a4b;
+  --dx-ok-fon: #dcede3;
+  --dx-warn: #9c6608;
+  --dx-warn-fon: #f5e7cc;
+  --dx-bad: #9e372c;
+  --dx-bad-fon: #f3deda;
+}
+
+/* Kod — hujjatning asosiy mazmuni, shuning uchun u ko'zga tashlanadi. */
+:root {
+  --sl-text-code: 0.875rem;
+}
+
+/* Jadval — keng kontent gorizontal SCROLL bo'ladi, sahifa emas. */
+.sl-markdown-content table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.sl-markdown-content th {
+  white-space: nowrap;
+  font-size: var(--sl-text-sm);
+  letter-spacing: 0.02em;
+}
+
+/* ⚠ / ⛔ bilan boshlanadigan qatorlar ajralib tursin — ular hujjatdagi
+   eng muhim gaplar va oddiy matn ichida yo'qolib ketmasligi kerak. */
+.sl-markdown-content blockquote {
+  border-inline-start-color: var(--sl-color-accent);
+}
