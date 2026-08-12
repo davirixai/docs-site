@@ -3,8 +3,8 @@ title: Domain contract — 8 items
 description: What an ecosystem domain must declare for its agent to be generated.
 sidebar:
   order: 2
-holat: rejada
-holatIzoh: "The specification is final. The contract schema and checker are not implemented."
+holat: ishlaydi
+holatIzoh: "The contract schema and `davirix app check` WORK (SDK 0.2.0). The generator is not built yet."
 ---
 
 Eight items. Declare them all and the agent is generated.
@@ -203,11 +203,44 @@ choose the next step. Every error must be a **code** and must be
 ## Checking
 
 ```bash
-davirix app check
+pip install davirix
+davirix app check app-manifest.json
 ```
 
-It names the missing item **precisely** and assigns a level:
-[A0–A4](/en/ilova/darajalar/).
+An app declares itself with an **App Manifest** — a single JSON file.
+
+:::tip[Why not a directory layout]
+The checker does **not know the app's internal layout**. One app keeps
+commands in YAML files, another in code decorators.
+
+If the checker depended on a directory shape, the **first app's shape
+would become the standard** and a second domain (restaurant, clinic)
+would not fit it.
+:::
+
+The output names each gap together with **the level it blocks**:
+
+```
+Daraja: A2 — Commands with idempotency, the agent WRITES
+
+  A3 ga chiqish uchun:
+    - [command.verification.missing] `inventory.stock.receive`:
+      no `verification`. A connector's reply is NOT a business outcome.
+```
+
+### CI gate
+
+```bash
+davirix app check app-manifest.json --min-level A3
+```
+
+⚠ The default `--min-level` is **A1**, not A3. An app that saw a red CI
+on day one would simply **switch the checker off**.
+
+### ⛔ The level is never declared
+
+There is no `level` field in the manifest and there never will be — it
+is **computed**. An app cannot **call itself** A4.
 
 ## Next
 

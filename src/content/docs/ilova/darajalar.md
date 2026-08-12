@@ -3,8 +3,8 @@ title: Tayyorlik darajalari A0–A4
 description: Ekosistemangizning har bir domeni qaysi darajada — va agent nima qila oladi.
 sidebar:
   order: 3
-holat: rejada
-holatIzoh: "Darajalar ta'riflangan. `davirix app check` ijrosi hali yo'q."
+holat: ishlaydi
+holatIzoh: "Darajalar ISHLAYDI: `davirix app check` ularni manifestdan hisoblaydi (SDK 0.2.0)."
 ---
 
 Har **domen** alohida darajalanadi. Daraja so'ralmaydi — u **bajarilgan bandlardan**

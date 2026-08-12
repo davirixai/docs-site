@@ -3,8 +3,8 @@ title: Domen shartnomasi — 8 band
 description: Agent generatsiya qilinishi uchun ekosistema domeni nimani e'lon qilishi kerak.
 sidebar:
   order: 2
-holat: rejada
-holatIzoh: "Spetsifikatsiya yakunlangan. Kontrakt sxemasi va tekshiruvchi ijroda emas."
+holat: ishlaydi
+holatIzoh: "Kontrakt sxemasi va `davirix app check` ISHLAYDI (SDK 0.2.0). Generator hali yo'q."
 ---
 
 Sakkiz band. Hammasi bo'lsa — agent generatsiya qilinadi.
@@ -203,11 +203,44 @@ qilinishi** shart.
 ## Tekshirish
 
 ```bash
-davirix app check
+pip install davirix
+davirix app check app-manifest.json
 ```
 
-Yetishmagan bandni **aniq** ko'rsatadi va daraja beradi:
-[A0–A4](/ilova/darajalar/).
+Ilova o'zini **App Manifest** bilan e'lon qiladi — bitta JSON fayl.
+
+:::tip[Nega katalog tuzilmasi emas]
+Tekshiruvchi ilovaning **ichki tartibini bilmaydi**. Bir ilova
+command'larni YAML fayllarda, boshqasi kodda dekoratorlarda saqlaydi.
+
+Agar tekshiruvchi katalog shakliga tayansa, **birinchi ilovaning
+shakli standart** bo'lib qolardi va ikkinchi domen (restoran, klinika)
+unga sig'masdi.
+:::
+
+Chiqish yetishmagan bandni **qaysi darajani to'sishi** bilan ko'rsatadi:
+
+```
+Daraja: A2 — Command'lar idempotentlik bilan, agent YOZADI
+
+  A3 ga chiqish uchun:
+    - [command.verification.missing] `inventory.stock.receive`:
+      `verification` yo'q. Konnektorning javobi biznes natijasi EMAS.
+```
+
+### CI darvozasi
+
+```bash
+davirix app check app-manifest.json --min-level A3
+```
+
+⚠ Standart `--min-level` — **A1**, A3 emas. Endi boshlagan ilova
+birinchi kunidan qizil CI ko'rsa, tekshiruvchini **o'chirib qo'yardi**.
+
+### ⛔ Daraja e'lon qilinmaydi
+
+Manifestda `level` maydoni **yo'q** va bo'lmaydi — u **hisoblanadi**.
+Ilova o'zini A4 deb **atay olmaydi**.
 
 ## Keyingi qadam
 
