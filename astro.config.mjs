@@ -91,6 +91,23 @@ export default defineConfig({
           ],
         },
         {
+          // ⚡ Beshinchi auditoriya: platformani SERVERDA saqlaydigan
+          // kishi. Boshqa bo'limlar platformaga ULANISH haqida, bu esa
+          // uni TIRIK SAQLASH haqida.
+          label: "Operator",
+          translations: { en: "Operator" },
+          items: [
+            { slug: "operator/nima-bu" },
+            { slug: "operator/stek" },
+            { slug: "operator/sozlamalar" },
+            { slug: "operator/jim-nosozliklar" },
+            { slug: "operator/birinchi-ishga-tushirish" },
+            { slug: "operator/sirlar" },
+            { slug: "operator/zaxira" },
+            { slug: "operator/prod-darvozalari" },
+          ],
+        },
+        {
           label: "Ma'lumotnoma",
           translations: { en: "Reference" },
           items: [

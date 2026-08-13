@@ -1,0 +1,97 @@
+---
+title: Sirlar va kalitlar
+description: Qaysi sir qayerda yashaydi, nega ular alohida, va kredensiallar qanday yechiladi.
+sidebar:
+  order: 6
+holat: ishlaydi
+---
+
+## Ikki xil sir bor
+
+| Tur | Kim biladi | Misol |
+|---|---|---|
+| **Platforma sirlari** | servislar | `SERVICE_JWT_SECRET`, baza paroli |
+| **Tenant kredensiallari** | ⛔ **faqat hub** | Payme kaliti, SMS paroli, Bitrix webhook |
+
+⛔ Bu farq muhim: tenant kredensiali **hech qachon** konsolga,
+agent-runtime'ga yoki tool-executor'ga bermaydi. U integration-hub'da
+`vault:` havolasi orqali yechiladi.
+
+## Kredensial sxemasi
+
+```
+vault:kv/tenants/<tenant>/payme      ← prod
+vault:env/PAYME_KEY                  ← ⚠ faqat dev
+```
+
+⛔ **Inline sir RAD ETILADI.** Konnektor instansiga xom kalit yozib
+bo'lmaydi — kontrakt uni qabul qilmaydi.
+
+⚠ `vault:env/` — dev yo'li: sir konteyner muhitida turadi. Prod'da
+`VAULT_ADDR` + `VAULT_TOKEN` berilishi kerak, aks holda konnektorlar
+`credential_error` beradi (fail-closed).
+
+## Nega har servisga ALOHIDA kalit
+
+| Kalit | Kim uchun |
+|---|---|
+| `INTEGRATION_HUB_SHARED_SECRET` | hub'ga kiruvchi |
+| `KNOWLEDGE_SHARED_SECRET` | knowledge-runtime'ga kiruvchi |
+| `REGISTRY_SHARED_SECRET` | registry'ga kiruvchi |
+
+⛔ Ularni **bir xil qilmang**. Bitta kalitni ikkala servisga yuborish
+birining sirini ikkinchisiga oshkor qiladi — chaqiruvchi kompromis
+bo'lsa, u ikkala servisga ham kira oladi.
+
+## Ikki qatlam: kalit + JWT
+
+Ba'zi sirtlar **ikkalasini** talab qiladi:
+
+```
+X-API-Key          ← «bu servis chaqiryapti»
+Authorization: JWT ← «bu AYNAN o'sha servis»
+```
+
+⚠ Ular bir-birining o'rnini **bosmaydi**. Faqat JWT yuborilsa
+platform-core internal sirti `401` beradi — bu tipik jim nosozlik
+sababi.
+
+⚡ JWT **qisqa muddatli** (60 s) va **har so'rovda** yangidan zarb
+qilinadi. Klient qurilganda bir marta qo'yilsa, uzoq ishlagan
+jarayonda hamma keyingi chaqiruv `401` bo'lardi.
+
+## At-rest shifrlash
+
+Ikki alohida keyring bor va ular **turli ma'lumotni** himoya qiladi:
+
+| Sozlama | Nimani shifrlaydi |
+|---|---|
+| `PLATFORM_ENCRYPTION_KEYRING` | telefon raqamlari, roziliklar (ovozli kanal) |
+| `CHECKPOINT_ENCRYPTION_KEY` | ⚠ suhbat mazmuni — ism, telefon, buyurtma tafsilotlari |
+
+⛔ Ikkinchisi ko'pincha unutiladi: kalitsiz suhbatlar bazada **ochiq
+matnda** yotadi va bu faqat startup ogohlantirishida aytiladi.
+
+Keyring shakli:
+
+```json
+{"<kalit-id>": "<base64 32 bayt>"}
+```
+
+`ACTIVE_KEY_ID` **yangi** yozuvlarga tegishli; eski kalitlar keyring'da
+**o'qish uchun** qoladi. Rotatsiyada eski kalitni olib tashlamang —
+eski yozuvlar deshifrlanmay qoladi.
+
+## Rotatsiya tartibi
+
+1. Yangi kalitni keyring'ga **qo'shing** (eskisini qoldiring)
+2. `ACTIVE_KEY_ID` ni yangisiga o'zgartiring
+3. Servisni qayta ishga tushiring
+4. Eski kalitni **faqat** barcha yozuvlar qayta shifrlangach olib tashlang
+
+## Sir jurnalga tushmaydi
+
+Barcha servislar sirlarni `<redacted>` bilan yozadi va xato matnlariga
+kredensial qiymatini qo'shmaydi. ⚠ Lekin **manzil** ba'zan xatoga
+tushishi mumkin — masalan Bitrix webhook'da sir manzilning O'ZIDA
+bo'ladi. Shu bois hub xato matnlariga hostni ham qo'shmaydi.
