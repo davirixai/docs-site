@@ -6,8 +6,8 @@ sidebar:
   badge:
     text: Yangi
     variant: tip
-holat: rejada
-holatIzoh: "Spetsifikatsiya yozildi. `davirix app check` va generator ijrosi hali yo'q."
+holat: qisman
+holatIzoh: "`davirix app check` ISHLAYDI — PyPI'da `davirix` paketi (A0–A4 darajalari). Agent GENERATORI hali yo'q: hozir agent qo'lda sozlanadi."
 ---
 
 Siz biznes boshqaruv ekosistemasi quryapsiz. Unda **domenlar** bor:

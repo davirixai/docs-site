@@ -4,7 +4,7 @@ description: Which level each domain of your ecosystem is at — and what the ag
 sidebar:
   order: 3
 holat: ishlaydi
-holatIzoh: "The levels WORK: `davirix app check` computes them from the manifest (SDK 0.2.0)."
+holatIzoh: "The levels WORK: `davirix app check` computes them from the manifest (SDK `davirix` — PyPI)."
 ---
 
 Each **domain** is graded separately. The level is not requested — it

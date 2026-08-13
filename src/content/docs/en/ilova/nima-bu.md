@@ -6,8 +6,8 @@ sidebar:
   badge:
     text: New
     variant: tip
-holat: rejada
-holatIzoh: "The specification is written. `davirix app check` and the generator are not implemented yet."
+holat: qisman
+holatIzoh: "`davirix app check` WORKS — the `davirix` package on PyPI (levels A0–A4). The agent GENERATOR is not built yet: agents are configured by hand today."
 ---
 
 You are building a business operations ecosystem. It has **domains**:

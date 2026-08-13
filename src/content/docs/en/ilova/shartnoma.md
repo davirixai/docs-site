@@ -4,7 +4,7 @@ description: What an ecosystem domain must declare for its agent to be generated
 sidebar:
   order: 2
 holat: ishlaydi
-holatIzoh: "The contract schema and `davirix app check` WORK (SDK 0.2.0). The generator is not built yet."
+holatIzoh: "The contract schema and `davirix app check` WORK (SDK `davirix` — PyPI). The generator is not built yet."
 ---
 
 Eight items. Declare them all and the agent is generated.

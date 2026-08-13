@@ -4,7 +4,7 @@ description: Agent generatsiya qilinishi uchun ekosistema domeni nimani e'lon qi
 sidebar:
   order: 2
 holat: ishlaydi
-holatIzoh: "Kontrakt sxemasi va `davirix app check` ISHLAYDI (SDK 0.2.0). Generator hali yo'q."
+holatIzoh: "Kontrakt sxemasi va `davirix app check` ISHLAYDI (SDK `davirix` — PyPI). Generator hali yo'q."
 ---
 
 Sakkiz band. Hammasi bo'lsa — agent generatsiya qilinadi.

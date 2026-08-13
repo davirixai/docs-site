@@ -4,7 +4,7 @@ description: Ekosistemangizning har bir domeni qaysi darajada — va agent nima 
 sidebar:
   order: 3
 holat: ishlaydi
-holatIzoh: "Darajalar ISHLAYDI: `davirix app check` ularni manifestdan hisoblaydi (SDK 0.2.0)."
+holatIzoh: "Darajalar ISHLAYDI: `davirix app check` ularni manifestdan hisoblaydi (SDK `davirix` — PyPI)."
 ---
 
 Har **domen** alohida darajalanadi. Daraja so'ralmaydi — u **bajarilgan bandlardan**
