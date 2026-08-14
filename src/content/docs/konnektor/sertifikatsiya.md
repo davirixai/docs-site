@@ -4,7 +4,7 @@ description: L0–L4 darajalari, sertifikat nima va u ijro paytida qanday majbur
 sidebar:
   order: 4
 holat: qisman
-holatIzoh: "Kontrakt, imzo tekshiruvi va IJRO DARVOZASI ishlaydi (`enforce` da sertifikatsiz konnektor yozuv qila olmaydi). Sertifikat BERISH oqimi hali yo'q — u muvofiqlik to'plamining live qismini kutadi."
+holatIzoh: "Kontrakt, imzo tekshiruvi va IJRO DARVOZASI ishlaydi (`enforce` da sertifikatsiz yozuv bloklanadi). Sertifikat BERISH oqimi hali yo'q."
 ---
 
 Konnektor **darajalanadi**: qanday kafolat bera olishi sinovdan

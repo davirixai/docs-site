@@ -4,7 +4,7 @@ description: C1–C12 — the tests a connector must pass, and the failure each 
 sidebar:
   order: 5
 holat: qisman
-holatIzoh: "The suite LIST and level computation are implemented (`integration-hub/internal/conformance`): the three static checks (C1/C9/C12) run. The nine LIVE checks await a sandbox harness — they are `skipped` and do NOT count as passed."
+holatIzoh: "The list and level computation are implemented; the three static checks run. The nine LIVE checks await a sandbox harness — they are `skipped` and do NOT count as passed."
 ---
 
 Every test came from a **real failure**. The list grows: when a new

@@ -4,7 +4,7 @@ description: Levels L0–L4, what a certificate is, and how it is enforced at ru
 sidebar:
   order: 4
 holat: qisman
-holatIzoh: "The contract, signature verification and the RUNTIME GATE work (in `enforce`, an uncertified connector cannot write). Certificate ISSUANCE does not exist yet — it awaits the live part of the conformance suite."
+holatIzoh: "The contract, signature verification and the RUNTIME GATE work (`enforce` blocks uncertified writes). Certificate ISSUANCE does not exist yet."
 ---
 
 Connectors are **graded**: what guarantees they can offer is tested and
