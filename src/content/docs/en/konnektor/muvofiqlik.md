@@ -3,8 +3,8 @@ title: Conformance suite
 description: C1–C12 — the tests a connector must pass, and the failure each one came from.
 sidebar:
   order: 5
-holat: rejada
-holatIzoh: "The test list is final; implementing it as code is phase F1."
+holat: qisman
+holatIzoh: "The suite LIST and level computation are implemented (`integration-hub/internal/conformance`): the three static checks (C1/C9/C12) run. The nine LIVE checks await a sandbox harness — they are `skipped` and do NOT count as passed."
 ---
 
 Every test came from a **real failure**. The list grows: when a new

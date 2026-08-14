@@ -3,8 +3,8 @@ title: Certification
 description: Levels L0–L4, what a certificate is, and how it is enforced at runtime.
 sidebar:
   order: 4
-holat: rejada
-holatIzoh: "Design is complete. Implementation is in phases F1–F3 — no certificates are issued yet."
+holat: qisman
+holatIzoh: "The contract, signature verification and the RUNTIME GATE work (in `enforce`, an uncertified connector cannot write). Certificate ISSUANCE does not exist yet — it awaits the live part of the conformance suite."
 ---
 
 Connectors are **graded**: what guarantees they can offer is tested and

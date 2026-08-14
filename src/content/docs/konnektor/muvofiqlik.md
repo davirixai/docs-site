@@ -3,8 +3,8 @@ title: Muvofiqlik to'plami
 description: C1–C12 — konnektor o'tishi kerak bo'lgan testlar va har birining sababi.
 sidebar:
   order: 5
-holat: rejada
-holatIzoh: "Testlar ro'yxati yakunlangan; kod sifatida ijrosi F1 bosqichida."
+holat: qisman
+holatIzoh: "To'plam RO'YXATI va daraja hisobi ijroda (`integration-hub/internal/conformance`): statik uchtasi (C1·C9·C12) yuradi. To'qqiz LIVE testi sandbox harness'ini kutadi — ular `skipped` va daraja hisobida O'TGAN deb hisoblanmaydi."
 ---
 
 Har bir test **haqiqiy nosozlikdan** kelib chiqqan. Ro'yxat o'sadi: yangi

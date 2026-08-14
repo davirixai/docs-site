@@ -3,8 +3,8 @@ title: Sertifikatsiya
 description: L0–L4 darajalari, sertifikat nima va u ijro paytida qanday majburlanadi.
 sidebar:
   order: 4
-holat: rejada
-holatIzoh: "Dizayn tayyor. Ijro F1–F3 bosqichlarida — hozircha sertifikat berilmaydi."
+holat: qisman
+holatIzoh: "Kontrakt, imzo tekshiruvi va IJRO DARVOZASI ishlaydi (`enforce` da sertifikatsiz konnektor yozuv qila olmaydi). Sertifikat BERISH oqimi hali yo'q — u muvofiqlik to'plamining live qismini kutadi."
 ---
 
 Konnektor **darajalanadi**: qanday kafolat bera olishi sinovdan
