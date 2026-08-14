@@ -43,6 +43,46 @@ bo'lmaydi — kontrakt uni qabul qilmaydi.
 birining sirini ikkinchisiga oshkor qiladi — chaqiruvchi kompromis
 bo'lsa, u ikkala servisga ham kira oladi.
 
+## API kalitlari — tashqi platformani ulash
+
+Boshqa tizimni Davirix'ga ulash uchun **API kalit** kerak. Uni
+konsoldan chiqarasiz: **Platform → Users & Roles → API keys → Issue
+API key**.
+
+⛔ **Kalit bir marta ko'rsatiladi.** U hech qayerda saqlanmaydi —
+yo'qotsangiz, bekor qiling va yangisini chiqaring.
+
+### Qaysi rolni tanlash
+
+| Rol | Nimaga yetadi |
+|---|---|
+| `service` | ⛔ admin sirtiga **umuman kirmaydi** — xizmat sirtlari uchun |
+| `admin` | admin sirtiga kiradi; qamrov bilan **cheklanadi** |
+
+### Qamrov (scope) — kalitni toraytirish
+
+`admin` kalitiga qaysi bo'limlar ochilishini tanlaysiz (`agents`,
+`graphs`, `connectors`, …). Qamrovdan tashqari bo'lim `403` beradi.
+
+⚡ **Ikki holat bir xil emas:**
+
+| Holat | Ma'nosi |
+|---|---|
+| Qamrov tanlangan | faqat o'sha bo'limlar · **o'z tenantida** |
+| «No scope limit» | ⚠ **butun** admin sirti · **barcha** tenantda |
+
+⛔ Qamrovsiz kalit tenantlar orasida yura oladi. Uni faqat o'zingiz
+boshqaradigan platforma avtomatikasi uchun ishlating.
+
+### Birinchi kalit — serverdan
+
+Konsolga kirish uchun ham kalit kerak bo'lgan holat («tovuq-tuxum»)
+`PLATFORM_BOOTSTRAP_API_KEY` env o'zgaruvchisi bilan yechiladi. U
+**ishonch ildizi** va shu bois serverda qoladi: undan keyingi barcha
+kalitlar konsoldan beriladi.
+
+⚠ Bootstrap kaliti qamrovsiz. Uni kundalik integratsiyaga bermang.
+
 ## Ikki qatlam: kalit + JWT
 
 Ba'zi sirtlar **ikkalasini** talab qiladi:
