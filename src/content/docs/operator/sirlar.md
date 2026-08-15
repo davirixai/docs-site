@@ -74,6 +74,34 @@ yo'qotsangiz, bekor qiling va yangisini chiqaring.
 ⛔ Qamrovsiz kalit tenantlar orasida yura oladi. Uni faqat o'zingiz
 boshqaradigan platforma avtomatikasi uchun ishlating.
 
+### Agent bilan gaplashish — token almashuvi
+
+API kalit `platform-core` admin sirtini ochadi, lekin `agent-runtime`
+(suhbat) **boshqa auth** ishlatadi. Ko'prik — almashuv:
+
+```bash
+# 1. kalitni chat tokeniga almashtirish
+curl -X POST https://<host>/api/admin/agent-tokens \
+     -H "X-API-Key: $KALIT"
+# → {"token": "...", "expires_in": 300, "tenant_id": "..."}
+
+# 2. agent bilan suhbat
+curl -X POST https://<runtime>/v1/chat \
+     -H "Authorization: Bearer $TOKEN" \
+     -d '{"tenant_id":"...","message":"salom","agent_id":"..."}'
+```
+
+⚠ Token **5 daqiqa** yashaydi va uni qayta ishlatish mumkin — har
+chaqiruvda almashtirish shart emas.
+
+⛔ **Token o'z tenantiga qadalgan.** Boshqa tenant bilan chaqirsangiz
+`403 service_token_tenant_mismatch`. Tenant tokendan keladi, so'rov
+tanasidan emas.
+
+⚠ Bunga alohida qamrov kerak: **`agent-tokens`**. `agents` qamrovi
+yetarli emas — agent ta'rifini o'qish va agentni **ishga tushirish**
+turli huquqlar.
+
 ### Birinchi kalit — serverdan
 
 Konsolga kirish uchun ham kalit kerak bo'lgan holat («tovuq-tuxum»)
