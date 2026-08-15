@@ -223,6 +223,59 @@ curl -X POST https://<host>/api/admin/knowledge/documents \
 ⚠ Hujjat chegarasi — **10 MiB**. Kattaroq fayl `413` beradi va
 knowledge-runtime'ga umuman bormaydi.
 
+### Tasnif lug'ati — «qaysi bilim qachon»
+
+Hujjatga tasnif qo'shasiz (`doc_type`, `audience`, …). Lekin lug'atsiz
+u **jim buziladi**: bitta hujjat `type: kafolat`, ikkinchisi
+`doc_type: warranty` bo'lib ketadi va ular hech qachon mos kelmaydi.
+
+Shuning uchun baza o'z lug'atini **e'lon qiladi**:
+
+```bash
+curl -X PUT https://<host>/api/admin/knowledge/bases/<base_id>/metadata-schema \
+  -H "X-API-Key: $KALIT" \
+  -H 'Content-Type: application/json' \
+  -d '{"metadata_schema": {
+        "doc_type": ["kafolat", "narx", "texnik"],
+        "audience": ["mijoz", "xodim"]
+      }}'
+```
+
+Endi yuklashda tasnif **tekshiriladi**:
+
+```bash
+curl -X POST https://<host>/api/admin/knowledge/documents \
+  -H "X-API-Key: $KALIT" -H 'Content-Type: application/json' \
+  -d '{"text":"24 oy kafolat","space_id":"kb:kafolat",
+       "metadata":{"doc_type":"kafolat","audience":"mijoz"}}'
+```
+
+⚡ Xato darhol va **nomi bilan** aytiladi:
+
+```
+422  metadata[doc_typ]: bu tasnif kaliti lug'atda yo'q.
+     Ruxsat etilgan kalitlar: audience, doc_type
+
+422  metadata[doc_type]: 'warranty' qiymati ruxsat etilmagan.
+     Ruxsat etilgan: kafolat, narx
+```
+
+⛔ **`null` va `{}` boshqa narsa:**
+
+| Yuborilgan | Ma'nosi |
+|---|---|
+| lug'at e'lon qilinmagan | metadata **erkin** (eski xulq) |
+| `{"metadata_schema": null}` | lug'atni **o'chirish** |
+| `{"metadata_schema": {}}` | tasnif kaliti **umuman taqiqlanadi** |
+
+⚠ Lug'atdagi kalit **majburiy emas** — hujjatda bo'lmasligi mumkin.
+«To'ldirilmagan maydon» va «noto'g'ri qiymat» turli og'irlikdagi
+muammolar.
+
+⚠ Bugun tekshiruv **JSON** yuklashda ishlaydi. `multipart` (fayl)
+yo'lida u keyingi bosqichda — ikkinchi multipart parseri yozilmasligi
+uchun.
+
 ### Agentni bilimga bog'lash
 
 ⛔ **Eng muhim qadam.** Agent ta'rifida qaysi kolleksiyalarda
@@ -400,6 +453,7 @@ Bu qadamlar bir marta, hamma mijozga umumiy:
 | Bilim — yuklash | `POST /api/admin/knowledge/documents` | ✅ fayl · matn |
 | Bilim — o'qish | `GET /api/admin/knowledge/bases` · `/documents` · `/jobs` | ✅ |
 | Bilim — marshrutlash | agent `requires.knowledge` | ✅ bayroq ostida |
+| Bilim — tasnif lug'ati | `PUT /knowledge/bases/{id}/metadata-schema` | ✅ JSON yuklashda |
 | Ulanishni sinash | `POST /connectors/{id}/test` | ⛔ ruxsat grantsiz |
 
 ### ⛔ Ulanishni sinash
