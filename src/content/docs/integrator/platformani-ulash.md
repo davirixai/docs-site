@@ -194,6 +194,81 @@ curl -X POST https://<host>/api/admin/agents \
 
 ---
 
+## 3b. Bilim yuklash
+
+Agent mijoz hujjatlaridan javob berishi uchun ularni yuklaysiz.
+
+### Fayl (PDF, DOCX, XLSX, CSV, HTML, MD, TXT)
+
+```bash
+curl -X POST https://<host>/api/admin/knowledge/documents \
+  -H "X-API-Key: $KALIT" \
+  -F "file=@kafolat-shartlari.pdf" \
+  -F "space_id=kb:kafolat"
+```
+
+### Xom matn
+
+```bash
+curl -X POST https://<host>/api/admin/knowledge/documents \
+  -H "X-API-Key: $KALIT" \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"Barcha kameralarga 24 oy kafolat.","filename":"kafolat.txt","space_id":"kb:kafolat"}'
+```
+
+```json
+{ "document_id": "…", "status": "queued" }
+```
+
+⚠ Hujjat chegarasi — **10 MiB**. Kattaroq fayl `413` beradi va
+knowledge-runtime'ga umuman bormaydi.
+
+### Agentni bilimga bog'lash
+
+⛔ **Eng muhim qadam.** Agent ta'rifida qaysi kolleksiyalarda
+qidirishini e'lon qilasiz:
+
+```json
+"setup": {
+  "requires": { "knowledge": ["kb:kafolat"] }
+}
+```
+
+Yoki qobiliyat darajasida — aniqroq:
+
+```json
+"capabilities": [
+  { "id": "kafolat-savollari",
+    "requires_knowledge": ["kb:kafolat"] }
+]
+```
+
+⚡ **E'lon qilmasangiz** agent tenantning **butun** bilimida qidiradi:
+kafolat savoliga texnik qo'llanma chiqishi mumkin.
+
+⚠ Bu marshrutlash `KNOWLEDGE_BINDING_ENABLED=true` bo'lganda ishlaydi.
+Bayroq o'chiq bo'lsa e'lon **e'tiborsiz** qoladi.
+
+### Qidirish
+
+```bash
+curl -X POST https://<host>/api/admin/knowledge/search \
+  -H "X-API-Key: $KALIT" \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"kafolat muddati","top_k":5}'
+```
+
+Javobda **iqtiboslar** (`citations`) va halol hisoblagichlar bor:
+
+| Maydon | Ma'nosi |
+|---|---|
+| `excluded_unpublished` | bilim BOR, lekin nashr etilmagan |
+| `excluded_out_of_validity` | muddati o'tgan |
+| `reranked` · `rerank_degraded` | qayta tartiblash ishladimi |
+
+⛔ Bo'sh natija + `excluded_unpublished > 0` — «bunday bilim yo'q»
+**emas**. Hujjat bor, lekin holati chiqishga ruxsat bermayapti.
+
 ## 4. Nashr
 
 Yaratilgan versiya `draft` holatida — u **ijro etilmaydi**.
@@ -321,13 +396,11 @@ Bu qadamlar bir marta, hamma mijozga umumiy:
 | Model/provayder | `/api/admin/model-profiles` · `/providers` | ✅ |
 | Tasdiqlar | `/api/admin/approvals` | ✅ |
 | Audit | `/api/admin/audit` | ✅ o'qish |
-| Bilim | `/api/admin/knowledge/*` | ◐ **faqat o'qish** |
+| Bilim — qidiruv | `POST /api/admin/knowledge/search` | ✅ |
+| Bilim — yuklash | `POST /api/admin/knowledge/documents` | ✅ fayl · matn |
+| Bilim — o'qish | `GET /api/admin/knowledge/bases` · `/documents` · `/jobs` | ✅ |
+| Bilim — marshrutlash | agent `requires.knowledge` | ✅ bayroq ostida |
 | Ulanishni sinash | `POST /connectors/{id}/test` | ⛔ ruxsat grantsiz |
-
-### ◐ Bilim — hozircha konsoldan
-
-Baza yaratish va hujjat yuklash API'da yo'q; `GET` yo'llari ishlaydi.
-Mijoz hujjatlarini bugun konsol orqali yuklaysiz.
 
 ### ⛔ Ulanishni sinash
 
