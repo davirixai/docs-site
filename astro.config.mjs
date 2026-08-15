@@ -53,6 +53,9 @@ export default defineConfig({
           translations: { en: "Integrator" },
           badge: { text: "SDK", variant: "note" },
           items: [
+            // ⚡ Birinchi o'rinda: integrator BIRINCHI shu savolga
+            // javob izlaydi — «o'z tizimimni qanday ulayman».
+            { slug: "integrator/platformani-ulash" },
             { slug: "integrator/python-sdk" },
             { slug: "integrator/http-api" },
             { slug: "integrator/holatlar" },
@@ -113,6 +116,7 @@ export default defineConfig({
           items: [
             { slug: "malumotnoma/holatlar-jadvali" },
             { slug: "malumotnoma/xato-kodlari" },
+            { slug: "malumotnoma/api" },
             { slug: "malumotnoma/cheklovlar" },
           ],
         },
