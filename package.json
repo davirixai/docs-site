@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/seo-postbuild.mjs",
     "preview": "astro preview",
     "check": "astro check --minimumSeverity error",
     "lint:status": "node scripts/check-status.mjs",

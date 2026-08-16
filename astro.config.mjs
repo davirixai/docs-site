@@ -1,6 +1,15 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
+
+import { fallbackRoutes } from "./scripts/fallback-routes.mjs";
+
+// ⛔ Tarjima qilinmagan sahifalar sitemapdan CHIQARILADI: ular
+// `noindex` (sabab — `src/components/Head.astro`), sitemap esa faqat
+// indekslanadigan manzillarni ko'rsatishi kerak. Ikkisi ziddiyatli
+// bo'lsa Google qarama-qarshi signal oladi.
+const FALLBACK = fallbackRoutes();
 
 // docs.davirix.com — dasturchi hujjatlari.
 //
@@ -15,10 +24,51 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
   site: "https://docs.davirix.com",
   integrations: [
+    // ⚠ Sitemap ATAYLAB shu yerda: Starlight uni o'zi qo'shadi, LEKIN
+    // faqat ro'yxatda topilmasa (`starlight/index.ts:107`). Filtr kerak
+    // bo'lgani uchun o'zimiz qo'shamiz — shu bilan Starlight o'zinikini
+    // qo'shmaydi va ikkita sitemap chiqmaydi.
+    //
+    // ⛔ `i18n` bloki Starlight'dan AYNAN ko'chirildi
+    // (`integrations/sitemap.ts`). Usiz sitemapdagi hreflang
+    // annotatsiyalari yo'qolardi — ya'ni filtr qo'shish jimgina
+    // ko'p tilli SEO'ni buzardi.
+    sitemap({
+      i18n: { defaultLocale: "root", locales: { root: "uz", en: "en" } },
+      filter: (sahifa) => !FALLBACK.has(new URL(sahifa).pathname),
+    }),
     starlight({
       title: "Davirix",
       description:
         "AI xodim platformasi — dasturchi hujjatlari: ijro API'si, konnektor yozish va domain pack.",
+      // ⚠ Starlight `twitter:card: summary_large_image` ni O'ZI yozadi,
+      // lekin rasmni yozmaydi — ya'ni e'lon bor, orqasida hech narsa
+      // yo'q va havola quruq matn bo'lib chiqadi. Shu bo'shliq to'ldiriladi.
+      //
+      // ⛔ Manzil MUTLAQ bo'lishi shart: OG kraulerlari nisbiy yo'lni
+      // hal qila olmaydi. Rasm `public/og.png` da va u
+      // `scripts/gen-og-image.mjs` bilan QO'LDA generatsiya qilingan
+      // (sabab — o'sha skript izohida: build muhitidagi shriftlarga
+      // tayanib bo'lmaydi).
+      head: [
+        {
+          tag: "meta",
+          attrs: { property: "og:image", content: "https://docs.davirix.com/og.png" },
+        },
+        { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
+        { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
+        {
+          tag: "meta",
+          attrs: {
+            property: "og:image:alt",
+            content: "Davirix — dasturchi hujjatlari, docs.davirix.com",
+          },
+        },
+        {
+          tag: "meta",
+          attrs: { name: "twitter:image", content: "https://docs.davirix.com/og.png" },
+        },
+      ],
       defaultLocale: "root",
       locales: {
         root: { label: "O'zbekcha", lang: "uz" },
@@ -36,6 +86,8 @@ export default defineConfig({
         // Har sahifa tepasida HOLAT belgisi ko'rsatiladi (ishlaydi /
         // qisman / hali yo'q). Standart komponent uni bilmaydi.
         PageTitle: "./src/components/PageTitle.astro",
+        // Tarjima qilinmagan sahifaga `noindex` qo'yadi.
+        Head: "./src/components/Head.astro",
       },
       sidebar: [
         {

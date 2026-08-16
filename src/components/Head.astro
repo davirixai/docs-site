@@ -1,0 +1,36 @@
+---
+// TARJIMA QILINMAGAN sahifani indeksdan chiqaradi.
+//
+// ═══ MUAMMO ═══
+//
+// Starlight inglizcha tarjima yo'q sahifani BARIBIR `/en/...` da
+// chiqaradi — kontent o'zbekcha qoladi. Natijada sahifa `lang="en"`
+// deb E'LON QILINADI, ichida esa o'zbekcha matn turadi va canonical
+// o'ziga ishora qiladi.
+//
+// Google uchun bu ikki ALOHIDA sahifa: bir xil matn, ikki manzil,
+// biri yolg'on til yorlig'i bilan. Bugungi holatda 68 URL'dan 10 tasi
+// aynan shunday — indeksning oltidan biri.
+//
+// ═══ NEGA `noindex, follow`, canonical EMAS ═══
+//
+// Krosslingvistik canonical ziddiyat tug'diradi: Starlight ayni
+// vaqtda hreflang chiqaradi va u canonical manzillarga ishora qilishi
+// kutiladi. Ikki signal bir-birini inkor qilardi va Google ikkalasini
+// ham e'tiborsiz qoldirardi.
+//
+// `noindex, follow` bir ma'noli: bu nusxani indekslama, LEKIN
+// havolalarini kuzat — o'zbekcha asl nusxa indeksda qoladi va
+// sahifa ingliz rejimidagi odam uchun ochiq turaveradi.
+//
+// ⚠ `isFallback` — Starlight'ning O'Z hisobi (`utils/routing`), fayl
+// tizimini qayta o'qish emas. Sitemap filtri esa fayl tizimidan
+// hisoblaydi: ikki manba mos kelishini `scripts/seo-postbuild.mjs`
+// har build'da ISBOTLAYDI.
+import Default from "@astrojs/starlight/components/Head.astro";
+
+const { isFallback } = Astro.locals.starlightRoute;
+---
+
+<Default />
+{isFallback && <meta name="robots" content="noindex, follow" />}
