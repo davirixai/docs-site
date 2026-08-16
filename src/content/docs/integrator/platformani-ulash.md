@@ -387,6 +387,80 @@ oldin almashtirish shart emas — muddati tugaganda yangilang.
 
 ---
 
+## 6. Fon agentlari
+
+Agent mijoz so'ramasdan, **jadval bo'yicha** ishlashi mumkin — masalan
+har kuni ertalab kechagi buyurtmalarni tekshirish.
+
+```bash
+curl -X PUT https://<host>/api/admin/background-agents/kunlik-hisobot \
+  -H "X-API-Key: $KALIT" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "agent_ref": "mijoz-agenti",
+    "owner_user_id": "<user-id>",
+    "envelope": {
+      "allowed_tools": ["connector.rest.request"],
+      "cost_budget_per_run": 1.5,
+      "cost_budget_per_period": 30.0,
+      "time_budget_s": 300,
+      "trigger_type": "cron",
+      "schedule": "0 9 * * *",
+      "instruction": "Kechagi buyurtmalarni tekshir va hisobot ber",
+      "max_risk_level": "low",
+      "output_channels": ["event"]
+    }
+  }'
+```
+
+:::danger[`instruction` cron uchun MAJBURIY]
+`schedule` **qachon** ishlashni aytadi, `instruction` — **nima**
+qilishni. Ikkinchisisiz agent uyg'onadi va hech narsa qilmaydi.
+Topshiriqsiz cron konfiguratsiya `422` oladi.
+:::
+
+⚠ `event` triggerda ixtiyoriy — u yerda stimulning o'zi kontekst
+beradi (`deadline_approaching`, `inbound_webhook`).
+
+### Vakolat konverti — nima uchun majburiy
+
+| Maydon | Nega |
+|---|---|
+| `allowed_tools` | agent **faqat shu** toollarni chaqiradi |
+| `cost_budget_per_run` | bitta ijro narxi shifti |
+| `cost_budget_per_period` | davr bo'yicha shift |
+| `time_budget_s` | ijro vaqti chegarasi (Temporal majburlaydi) |
+| `max_risk_level` | qaysi darajagacha tasdiqsiz ishlaydi |
+| `output_channels` | natija qayerga boradi |
+
+⛔ Fon agenti **nazoratsiz ishlamasligi** kerak: u odam so'ramasdan
+harakat qiladi, shuning uchun har chegara oldindan e'lon qilinadi.
+
+### Pauza va davom
+
+```
+POST /api/admin/background-agents/{key}/pause
+POST /api/admin/background-agents/{key}/resume
+```
+
+⚡ Pauza **darhol** kuchga kiradi: rekonsil jadvalni o'chiradi, va
+konvert har triggerda qayta o'qilgani uchun ketayotgan ijro ham
+to'xtaydi.
+
+### ⚠ Operator tomonida kerak
+
+| Nima | Busiz |
+|---|---|
+| Temporal | jadval quriladigan joy yo'q |
+| `workflow-workers` | ijro qiluvchi yo'q |
+| `BACKGROUND_AGENT_SYNC_ENABLED=true` | konfiguratsiya bazada qoladi, jadval qurilmaydi |
+
+⛔ Rekonsil **standart o'chiq**: u Temporal'ga jadval yozadi va
+noto'g'ri konfiguratsiya real ijroga — model puliga va tashqi
+ta'sirga — olib keladi. Operator ongli yoqadi.
+
+---
+
 ## Xatolarni qanday o'qish
 
 | Kod | Ma'nosi | Nima qilasiz |
@@ -448,6 +522,7 @@ Bu qadamlar bir marta, hamma mijozga umumiy:
 | Ijro | `/v1/executions` | ✅ |
 | Model/provayder | `/api/admin/model-profiles` · `/providers` | ✅ |
 | Tasdiqlar | `/api/admin/approvals` | ✅ |
+| Fon agentlari | `/api/admin/background-agents` | ✅ Temporal bilan |
 | Audit | `/api/admin/audit` | ✅ o'qish |
 | Bilim — qidiruv | `POST /api/admin/knowledge/search` | ✅ |
 | Bilim — yuklash | `POST /api/admin/knowledge/documents` | ✅ fayl · matn |
