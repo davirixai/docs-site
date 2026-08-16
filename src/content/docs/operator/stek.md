@@ -43,6 +43,10 @@ Compose faylidan o'lchangan (`docker compose config`):
 | `qdrant` | — |
 | `knowledge-runtime` | qdrant **sog'lom** · inference-gateway |
 | `inference-gateway` | — |
+| `ai-nats` | — |
+| `temporal-db-init` | postgres |
+| `temporal` | postgres · **db-init tugaganini** |
+| `workflow-workers` | **temporal sog'lom** · platform-core |
 
 ## Uchta migratsiya — uchta ALOHIDA baza
 
@@ -82,6 +86,58 @@ platform-core · tool-executor · integration-hub · registry · gateway
 agent-runtime · knowledge-runtime · web-console
 ```
 
+## ⚡ Ikki xizmat — ikki JIM nosozlik
+
+Bu ikkalasi ishlamasa platforma **ko'tariladi va sog'lom ko'rinadi**,
+lekin butun bir imkoniyat jimgina yo'q bo'ladi.
+
+### `ai-nats` — audit zanjiri
+
+⛔ Busiz hodisalar `outbox_events` da `pending` holatida **abadiy
+to'planadi**. Audit zanjiri qurilmaydi, konsoldagi audit sahifasi
+bo'sh qoladi.
+
+⚠ O'lchangan: NATS qo'shilishidan oldin 85 ta kutayotgan hodisa bor
+edi, eng eskisi ikki kunlik — shundan **27 tasi `user.login`** va
+13 tasi `user.login_failed`. Ya'ni kirish urinishlari hech qayerda
+yozilmagan.
+
+Tekshirish:
+
+```sql
+select status, count(*) from outbox_events group by status;
+select count(*) from audit_records;
+```
+
+`pending` o'sib borsa va `audit_records` nol bo'lsa — NATS yo'q.
+
+### `temporal` + `workflow-workers` — fon agentlari
+
+⛔ Busiz fon agenti konfiguratsiyasi bazaga tushadi va **o'sha yerda
+qoladi**: jadval qurilmaydi, agent hech qachon uyg'onmaydi. API 200
+qaytaradi, konsol uni «faol» deb ko'rsatadi.
+
+⚠ Rekonsil sikli alohida bayroq talab qiladi:
+
+```
+BACKGROUND_AGENT_SYNC_ENABLED=true
+```
+
+⛔ Standart **o'chiq**: sikl Temporal'ga jadval yozadi va noto'g'ri
+konfiguratsiya real ijroga — model puliga va tashqi ta'sirga — olib
+keladi.
+
+Tekshirish:
+
+```bash
+docker logs <workflow-workers> | grep background_sync
+docker exec <temporal> temporal schedule list --address temporal:7233
+```
+
+⚠ Port **7234** (7233 emas): standart port ko'pincha boshqa Temporal
+tomonidan band bo'ladi. Konteyner ichida manzil baribir
+`temporal:7233`.
+
 ## Bir martalik bosqichlar nima qiladi
 
 | Bosqich | Ishi | Yiqilsa |
@@ -110,4 +166,6 @@ qoladi — ularda tashqi auth yo'q va ochiq port butun ma'lumotni berardi.
 | integration-hub | 8004 | ⛔ |
 | inference-gateway | 8081 | ⛔ |
 | tool-executor | 8083 | ⛔ |
+| ai-nats | 4222 | ⛔ |
+| temporal | 7233 | ⚙ `TEMPORAL_PORT` (standart **7234**) |
 | qdrant | 6333 | ⛔ |
